@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-framework="elm">
+<head>
+	<meta charset="utf-8">
+	<title>Elm • TodoMVC</title>
+	<script src="elm-runtime.js"></script>
+	<script src="build/Todo.js"></script>
+	<link rel="stylesheet" href="bower_components/todomvc-common/base.css">
+	<style>
+		body {
+			width: auto;
+		}
+	</style>
+</head>
+
+<body>
+<script>
+	(function () {
+		var storedState = localStorage.getItem('todos-elm');
+		var startingState = storedState ? JSON.parse(storedState) : null;
+
+		var todomvc = Elm.fullscreen(Elm.Todo, { getStorage: startingState });
+		todomvc.ports.focus.subscribe(function (selector) {
+			setTimeout(function () {
+				var nodes = document.querySelectorAll(selector);
+				if (nodes.length === 1 && document.activeElement !== nodes[0]) {
+					nodes[0].focus()
+				}
+			}, 50);
+		});
+
+		todomvc.ports.setStorage.subscribe(function (state) {
+			localStorage.setItem('todos-elm', JSON.stringify(state));
+		});
+	}());
+</script>
+<script async src="bower_components/todomvc-common/base.js"></script>
+</body>
+</html>
