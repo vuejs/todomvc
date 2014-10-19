@@ -144,8 +144,8 @@ view state =
       , infoFooter
       ]
 
-onEnter : Input.Handle a -> a -> Attribute
-onEnter handle value =
+onenter : Input.Handle a -> a -> Attribute
+onenter handle value =
     on "keydown" (when (\k -> k.keyCode == enterKeyCode) getKeyboardEvent) handle (always value)
 
 taskEntry : String -> Html
@@ -160,7 +160,7 @@ taskEntry task =
           , value task
           , name "newTodo"
           , on "input" getValue actions.handle UpdateField
-          , onEnter actions.handle Add
+          , onenter actions.handle Add
           ]
           []
       ]
@@ -230,7 +230,7 @@ todoItem todo =
           , id ("todo-" ++ show todo.id)
           , on "input" getValue actions.handle (UpdateTask todo.id)
           , onblur actions.handle (EditingTask todo.id False)
-          , onEnter actions.handle (EditingTask todo.id False)
+          , onenter actions.handle (EditingTask todo.id False)
           ]
           []
       ]
