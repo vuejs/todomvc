@@ -46,7 +46,7 @@ type State =
     }
 
 type Task =
-    { title : String
+    { title       : String
     , completed   : Bool
     , editing     : Bool
     , id          : Int
@@ -54,7 +54,7 @@ type Task =
 
 newTask : String -> Int -> Task
 newTask title id =
-    { title = title
+    { title = String.trim title
     , completed = False
     , editing = False
     , id = id
@@ -95,7 +95,7 @@ step action state =
       Add ->
           { state | uid <- state.uid + 1
                   , field <- ""
-                  , tasks <- if String.isEmpty state.field
+                  , tasks <- if String.isEmpty <| String.trim state.field
                                then state.tasks
                                else state.tasks ++ [newTask state.field state.uid]
           }

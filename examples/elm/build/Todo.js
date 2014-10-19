@@ -2004,7 +2004,7 @@ Elm.Todo.make = function (_elm) {
              ,completed: false
              ,editing: false
              ,id: id
-             ,title: title};
+             ,title: $String.trim(title)};
    });
    var step = F2(function (action,
    state) {
@@ -2015,7 +2015,7 @@ Elm.Todo.make = function (_elm) {
                                ,state.uid + 1]
                               ,["field",""]
                               ,["tasks"
-                               ,$String.isEmpty(state.field) ? state.tasks : _L.append(state.tasks,
+                               ,$String.isEmpty($String.trim(state.field)) ? state.tasks : _L.append(state.tasks,
                                _L.fromArray([A2(newTask,
                                state.field,
                                state.uid)]))]],
