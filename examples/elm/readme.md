@@ -52,4 +52,4 @@ Then open `index.html` in your browser!
 
 ## Credit
 
-This TodoMVC application was created by [@evancz](https://github.com/evancz), and imported into Tastejs by [@passy](https://twitter.com/passy).
+This TodoMVC application was created by [@evancz](https://github.com/evancz), and imported into TasteJS by [@passy](https://twitter.com/passy).

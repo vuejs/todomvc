@@ -28,6 +28,12 @@ import Window
 import Graphics.Input
 import Graphics.Input as Input
 
+import Keyboard
+
+---- CONSTANTS ----
+
+enterKeyCode : Keyboard.KeyCode
+enterKeyCode = 13
 
 ---- MODEL ----
 
@@ -40,15 +46,15 @@ type State =
     }
 
 type Task =
-    { description : String
+    { title : String
     , completed   : Bool
     , editing     : Bool
     , id          : Int
     }
 
 newTask : String -> Int -> Task
-newTask desc id =
-    { description = desc
+newTask title id =
+    { title = title
     , completed = False
     , editing = False
     , id = id
@@ -102,7 +108,7 @@ step action state =
           in  { state | tasks <- map update state.tasks }
 
       UpdateTask id task ->
-          let update t = if t.id == id then { t | description <- task } else t
+          let update t = if t.id == id then { t | title <- task } else t
           in  { state | tasks <- map update state.tasks }
 
       Delete id ->
@@ -140,7 +146,7 @@ view state =
 
 onEnter : Input.Handle a -> a -> Attribute
 onEnter handle value =
-    on "keydown" (when (\k -> k.keyCode == 13) getKeyboardEvent) handle (always value)
+    on "keydown" (when (\k -> k.keyCode == enterKeyCode) getKeyboardEvent) handle (always value)
 
 taskEntry : String -> Html
 taskEntry task =
@@ -210,7 +216,7 @@ todoItem todo =
               []
           , label
               [ ondblclick actions.handle (\_ -> EditingTask todo.id True) ]
-              [ text todo.description ]
+              [ text todo.title ]
           , button
               [ class "destroy"
               , onclick actions.handle (always (Delete todo.id))
@@ -219,7 +225,7 @@ todoItem todo =
           ]
       , input
           [ class "edit"
-          , value todo.description
+          , value todo.title
           , name "title"
           , id ("todo-" ++ show todo.id)
           , on "input" getValue actions.handle (UpdateTask todo.id)

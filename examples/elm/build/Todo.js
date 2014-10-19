@@ -1817,6 +1817,7 @@ Elm.Todo.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $Html$Optimize$RefEq = Elm.Html.Optimize.RefEq.make(_elm),
    $Html$Tags = Elm.Html.Tags.make(_elm),
+   $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Native$Json = Elm.Native.Json.make(_elm),
@@ -1828,11 +1829,11 @@ Elm.Todo.make = function (_elm) {
    function (v) {
       return v === null ? $Maybe.Nothing : $Maybe.Just(typeof v === "object" && "tasks" in v && "field" in v && "uid" in v && "visibility" in v ? {_: {}
                                                                                                                                                   ,tasks: _U.isJSArray(v.tasks) ? _L.fromArray(v.tasks.map(function (v) {
-                                                                                                                                                     return typeof v === "object" && "description" in v && "completed" in v && "editing" in v && "id" in v ? {_: {}
-                                                                                                                                                                                                                                                             ,description: typeof v.description === "string" || typeof v.description === "object" && v.description instanceof String ? v.description : _E.raise("invalid input, expecting JSString but got " + v.description)
-                                                                                                                                                                                                                                                             ,completed: typeof v.completed === "boolean" ? v.completed : _E.raise("invalid input, expecting JSBoolean but got " + v.completed)
-                                                                                                                                                                                                                                                             ,editing: typeof v.editing === "boolean" ? v.editing : _E.raise("invalid input, expecting JSBoolean but got " + v.editing)
-                                                                                                                                                                                                                                                             ,id: typeof v.id === "number" ? v.id : _E.raise("invalid input, expecting JSNumber but got " + v.id)} : _E.raise("invalid input, expecting JSObject [\"description\",\"completed\",\"editing\",\"id\"] but got " + v);
+                                                                                                                                                     return typeof v === "object" && "title" in v && "completed" in v && "editing" in v && "id" in v ? {_: {}
+                                                                                                                                                                                                                                                       ,title: typeof v.title === "string" || typeof v.title === "object" && v.title instanceof String ? v.title : _E.raise("invalid input, expecting JSString but got " + v.title)
+                                                                                                                                                                                                                                                       ,completed: typeof v.completed === "boolean" ? v.completed : _E.raise("invalid input, expecting JSBoolean but got " + v.completed)
+                                                                                                                                                                                                                                                       ,editing: typeof v.editing === "boolean" ? v.editing : _E.raise("invalid input, expecting JSBoolean but got " + v.editing)
+                                                                                                                                                                                                                                                       ,id: typeof v.id === "number" ? v.id : _E.raise("invalid input, expecting JSNumber but got " + v.id)} : _E.raise("invalid input, expecting JSObject [\"title\",\"completed\",\"editing\",\"id\"] but got " + v);
                                                                                                                                                   })) : _E.raise("invalid input, expecting JSArray but got " + v.tasks)
                                                                                                                                                   ,field: typeof v.field === "string" || typeof v.field === "object" && v.field instanceof String ? v.field : _E.raise("invalid input, expecting JSString but got " + v.field)
                                                                                                                                                   ,uid: typeof v.uid === "number" ? v.uid : _E.raise("invalid input, expecting JSNumber but got " + v.uid)
@@ -1855,18 +1856,6 @@ Elm.Todo.make = function (_elm) {
                              ,A2($Html$Tags.a,
                              _L.fromArray([$Html$Attributes.href("http://todomvc.com")]),
                              _L.fromArray([$Html.text("TodoMVC")]))]))]));
-   var onEnter = F2(function (handle,
-   value) {
-      return A4($Html.on,
-      "keydown",
-      A2($Html.when,
-      function (k) {
-         return _U.eq(k.keyCode,13);
-      },
-      $Html.getKeyboardEvent),
-      handle,
-      $Basics.always(value));
-   });
    var ChangeVisibility = function (a) {
       return {ctor: "ChangeVisibility"
              ,_0: a};
@@ -1904,140 +1893,6 @@ Elm.Todo.make = function (_elm) {
    };
    var NoOp = {ctor: "NoOp"};
    var actions = $Graphics$Input.input(NoOp);
-   var taskEntry = function (task) {
-      return A2($Html$Tags.header,
-      _L.fromArray([$Html$Attributes.id("header")]),
-      _L.fromArray([A2($Html$Tags.h1,
-                   _L.fromArray([]),
-                   _L.fromArray([$Html.text("todos")]))
-                   ,A2($Html$Tags.input,
-                   _L.fromArray([$Html$Attributes.id("new-todo")
-                                ,$Html$Attributes.placeholder("What needs to be done?")
-                                ,$Html$Attributes.autofocus(true)
-                                ,$Html$Attributes.value(task)
-                                ,$Html$Attributes.name("newTodo")
-                                ,A4($Html.on,
-                                "input",
-                                $Html.getValue,
-                                actions.handle,
-                                UpdateField)
-                                ,A2(onEnter,
-                                actions.handle,
-                                Add)]),
-                   _L.fromArray([]))]));
-   };
-   var todoItem = function (todo) {
-      return function () {
-         var className = _L.append(todo.completed ? "completed " : "",
-         todo.editing ? "editing" : "");
-         return A2($Html$Tags.li,
-         _L.fromArray([$Html$Attributes.$class(className)]),
-         _L.fromArray([A2($Html$Tags.div,
-                      _L.fromArray([$Html$Attributes.$class("view")]),
-                      _L.fromArray([A2($Html$Tags.input,
-                                   _L.fromArray([$Html$Attributes.$class("toggle")
-                                                ,$Html$Attributes.type$("checkbox")
-                                                ,$Html$Attributes.checked(todo.completed)
-                                                ,A2($Html$Events.onclick,
-                                                actions.handle,
-                                                function (_v0) {
-                                                   return function () {
-                                                      return A2(Check,
-                                                      todo.id,
-                                                      $Basics.not(todo.completed));
-                                                   }();
-                                                })]),
-                                   _L.fromArray([]))
-                                   ,A2($Html$Tags.label,
-                                   _L.fromArray([A2($Html$Events.ondblclick,
-                                   actions.handle,
-                                   function (_v2) {
-                                      return function () {
-                                         return A2(EditingTask,
-                                         todo.id,
-                                         true);
-                                      }();
-                                   })]),
-                                   _L.fromArray([$Html.text(todo.description)]))
-                                   ,A2($Html$Tags.button,
-                                   _L.fromArray([$Html$Attributes.$class("destroy")
-                                                ,A2($Html$Events.onclick,
-                                                actions.handle,
-                                                $Basics.always(Delete(todo.id)))]),
-                                   _L.fromArray([]))]))
-                      ,A2($Html$Tags.input,
-                      _L.fromArray([$Html$Attributes.$class("edit")
-                                   ,$Html$Attributes.value(todo.description)
-                                   ,$Html$Attributes.name("title")
-                                   ,$Html$Attributes.id(_L.append("todo-",
-                                   $String.show(todo.id)))
-                                   ,A4($Html.on,
-                                   "input",
-                                   $Html.getValue,
-                                   actions.handle,
-                                   UpdateTask(todo.id))
-                                   ,A2($Html$Events.onblur,
-                                   actions.handle,
-                                   A2(EditingTask,todo.id,false))
-                                   ,A2(onEnter,
-                                   actions.handle,
-                                   A2(EditingTask,
-                                   todo.id,
-                                   false))]),
-                      _L.fromArray([]))]));
-      }();
-   };
-   var taskList = F2(function (visibility,
-   tasks) {
-      return function () {
-         var cssVisibility = $List.isEmpty(tasks) ? "hidden" : "visible";
-         var allCompleted = A2($List.all,
-         function (_) {
-            return _.completed;
-         },
-         tasks);
-         var isVisible = function (todo) {
-            return function () {
-               switch (visibility)
-               {case "Active":
-                  return $Basics.not(todo.completed);
-                  case "All": return true;
-                  case "Completed":
-                  return todo.completed;}
-               _E.Case($moduleName,
-               "between lines 165 and 170");
-            }();
-         };
-         return A2($Html$Tags.section,
-         _L.fromArray([$Html$Attributes.id("main")
-                      ,$Html.style(_L.fromArray([A2($Html.prop,
-                      "visibility",
-                      cssVisibility)]))]),
-         _L.fromArray([A2($Html$Tags.input,
-                      _L.fromArray([$Html$Attributes.id("toggle-all")
-                                   ,$Html$Attributes.type$("checkbox")
-                                   ,$Html$Attributes.name("toggle")
-                                   ,$Html$Attributes.checked(allCompleted)
-                                   ,A2($Html$Events.onclick,
-                                   actions.handle,
-                                   function (_v5) {
-                                      return function () {
-                                         return CheckAll($Basics.not(allCompleted));
-                                      }();
-                                   })]),
-                      _L.fromArray([]))
-                      ,A2($Html$Tags.label,
-                      _L.fromArray([$Html$Attributes.$for("toggle-all")]),
-                      _L.fromArray([$Html.text("Mark all as complete")]))
-                      ,A2($Html$Tags.ul,
-                      _L.fromArray([$Html$Attributes.id("todo-list")]),
-                      A2($List.map,
-                      todoItem,
-                      A2($List.filter,
-                      isVisible,
-                      tasks)))]));
-      }();
-   });
    var visibilitySwap = F3(function (uri,
    visibility,
    actualVisibility) {
@@ -2104,54 +1959,19 @@ Elm.Todo.make = function (_elm) {
                       ")")))]))]));
       }();
    });
-   var view = function (state) {
-      return A2($Html$Tags.div,
-      _L.fromArray([$Html$Attributes.$class("todomvc-wrapper")]),
-      _L.fromArray([A2($Html$Tags.section,
-                   _L.fromArray([$Html$Attributes.id("todoapp")]),
-                   _L.fromArray([A2($Html$Optimize$RefEq.lazy,
-                                taskEntry,
-                                state.field)
-                                ,A3($Html$Optimize$RefEq.lazy2,
-                                taskList,
-                                state.visibility,
-                                state.tasks)
-                                ,A3($Html$Optimize$RefEq.lazy2,
-                                controls,
-                                state.visibility,
-                                state.tasks)]))
-                   ,infoFooter]));
-   };
-   var scene = F2(function (state,
-   _v7) {
-      return function () {
-         switch (_v7.ctor)
-         {case "_Tuple2":
-            return A4($Graphics$Element.container,
-              _v7._0,
-              _v7._1,
-              $Graphics$Element.midTop,
-              A3($Html.toElement,
-              550,
-              _v7._1,
-              view(state)));}
-         _E.Case($moduleName,
-         "on line 292, column 5 to 54");
-      }();
-   });
    var focus = $Native$Ports.portOut("focus",
    $Native$Ports.outgoingSignal(function (v) {
       return v;
    }),
    function () {
-      var toSelector = function (_v11) {
+      var toSelector = function (_v0) {
          return function () {
-            switch (_v11.ctor)
+            switch (_v0.ctor)
             {case "EditingTask":
                return _L.append("#todo-",
-                 $String.show(_v11._0));}
+                 $String.show(_v0._0));}
             _E.Case($moduleName,
-            "on line 312, column 42 to 61");
+            "on line 318, column 42 to 61");
          }();
       };
       var needsFocus = function (act) {
@@ -2178,13 +1998,13 @@ Elm.Todo.make = function (_elm) {
    emptyState,
    $Basics.identity,
    getStorage);
-   var newTask = F2(function (desc,
+   var newTask = F2(function (title,
    id) {
       return {_: {}
              ,completed: false
-             ,description: desc
              ,editing: false
-             ,id: id};
+             ,id: id
+             ,title: title};
    });
    var step = F2(function (action,
    state) {
@@ -2273,7 +2093,7 @@ Elm.Todo.make = function (_elm) {
             return function () {
                  var update = function (t) {
                     return _U.eq(t.id,
-                    action._0) ? _U.replace([["description"
+                    action._0) ? _U.replace([["title"
                                              ,action._1]],
                     t) : t;
                  };
@@ -2284,21 +2104,17 @@ Elm.Todo.make = function (_elm) {
                  state);
               }();}
          _E.Case($moduleName,
-         "between lines 86 and 123");
+         "between lines 92 and 129");
       }();
    });
    var state = A3($Signal.foldp,
    step,
    startingState,
    actions.signal);
-   var main = A3($Signal.lift2,
-   scene,
-   state,
-   $Window.dimensions);
    var setStorage = $Native$Ports.portOut("setStorage",
    $Native$Ports.outgoingSignal(function (v) {
       return {tasks: _L.toArray(v.tasks).map(function (v) {
-                return {description: v.description
+                return {title: v.title
                        ,completed: v.completed
                        ,editing: v.editing
                        ,id: v.id};
@@ -2314,9 +2130,9 @@ Elm.Todo.make = function (_elm) {
    d) {
       return {_: {}
              ,completed: b
-             ,description: a
              ,editing: c
-             ,id: d};
+             ,id: d
+             ,title: a};
    });
    var State = F4(function (a,
    b,
@@ -2328,7 +2144,195 @@ Elm.Todo.make = function (_elm) {
              ,uid: c
              ,visibility: d};
    });
+   var enterKeyCode = 13;
+   var onEnter = F2(function (handle,
+   value) {
+      return A4($Html.on,
+      "keydown",
+      A2($Html.when,
+      function (k) {
+         return _U.eq(k.keyCode,
+         enterKeyCode);
+      },
+      $Html.getKeyboardEvent),
+      handle,
+      $Basics.always(value));
+   });
+   var taskEntry = function (task) {
+      return A2($Html$Tags.header,
+      _L.fromArray([$Html$Attributes.id("header")]),
+      _L.fromArray([A2($Html$Tags.h1,
+                   _L.fromArray([]),
+                   _L.fromArray([$Html.text("todos")]))
+                   ,A2($Html$Tags.input,
+                   _L.fromArray([$Html$Attributes.id("new-todo")
+                                ,$Html$Attributes.placeholder("What needs to be done?")
+                                ,$Html$Attributes.autofocus(true)
+                                ,$Html$Attributes.value(task)
+                                ,$Html$Attributes.name("newTodo")
+                                ,A4($Html.on,
+                                "input",
+                                $Html.getValue,
+                                actions.handle,
+                                UpdateField)
+                                ,A2(onEnter,
+                                actions.handle,
+                                Add)]),
+                   _L.fromArray([]))]));
+   };
+   var todoItem = function (todo) {
+      return function () {
+         var className = _L.append(todo.completed ? "completed " : "",
+         todo.editing ? "editing" : "");
+         return A2($Html$Tags.li,
+         _L.fromArray([$Html$Attributes.$class(className)]),
+         _L.fromArray([A2($Html$Tags.div,
+                      _L.fromArray([$Html$Attributes.$class("view")]),
+                      _L.fromArray([A2($Html$Tags.input,
+                                   _L.fromArray([$Html$Attributes.$class("toggle")
+                                                ,$Html$Attributes.type$("checkbox")
+                                                ,$Html$Attributes.checked(todo.completed)
+                                                ,A2($Html$Events.onclick,
+                                                actions.handle,
+                                                function (_v18) {
+                                                   return function () {
+                                                      return A2(Check,
+                                                      todo.id,
+                                                      $Basics.not(todo.completed));
+                                                   }();
+                                                })]),
+                                   _L.fromArray([]))
+                                   ,A2($Html$Tags.label,
+                                   _L.fromArray([A2($Html$Events.ondblclick,
+                                   actions.handle,
+                                   function (_v20) {
+                                      return function () {
+                                         return A2(EditingTask,
+                                         todo.id,
+                                         true);
+                                      }();
+                                   })]),
+                                   _L.fromArray([$Html.text(todo.title)]))
+                                   ,A2($Html$Tags.button,
+                                   _L.fromArray([$Html$Attributes.$class("destroy")
+                                                ,A2($Html$Events.onclick,
+                                                actions.handle,
+                                                $Basics.always(Delete(todo.id)))]),
+                                   _L.fromArray([]))]))
+                      ,A2($Html$Tags.input,
+                      _L.fromArray([$Html$Attributes.$class("edit")
+                                   ,$Html$Attributes.value(todo.title)
+                                   ,$Html$Attributes.name("title")
+                                   ,$Html$Attributes.id(_L.append("todo-",
+                                   $String.show(todo.id)))
+                                   ,A4($Html.on,
+                                   "input",
+                                   $Html.getValue,
+                                   actions.handle,
+                                   UpdateTask(todo.id))
+                                   ,A2($Html$Events.onblur,
+                                   actions.handle,
+                                   A2(EditingTask,todo.id,false))
+                                   ,A2(onEnter,
+                                   actions.handle,
+                                   A2(EditingTask,
+                                   todo.id,
+                                   false))]),
+                      _L.fromArray([]))]));
+      }();
+   };
+   var taskList = F2(function (visibility,
+   tasks) {
+      return function () {
+         var cssVisibility = $List.isEmpty(tasks) ? "hidden" : "visible";
+         var allCompleted = A2($List.all,
+         function (_) {
+            return _.completed;
+         },
+         tasks);
+         var isVisible = function (todo) {
+            return function () {
+               switch (visibility)
+               {case "Active":
+                  return $Basics.not(todo.completed);
+                  case "All": return true;
+                  case "Completed":
+                  return todo.completed;}
+               _E.Case($moduleName,
+               "between lines 171 and 176");
+            }();
+         };
+         return A2($Html$Tags.section,
+         _L.fromArray([$Html$Attributes.id("main")
+                      ,$Html.style(_L.fromArray([A2($Html.prop,
+                      "visibility",
+                      cssVisibility)]))]),
+         _L.fromArray([A2($Html$Tags.input,
+                      _L.fromArray([$Html$Attributes.id("toggle-all")
+                                   ,$Html$Attributes.type$("checkbox")
+                                   ,$Html$Attributes.name("toggle")
+                                   ,$Html$Attributes.checked(allCompleted)
+                                   ,A2($Html$Events.onclick,
+                                   actions.handle,
+                                   function (_v23) {
+                                      return function () {
+                                         return CheckAll($Basics.not(allCompleted));
+                                      }();
+                                   })]),
+                      _L.fromArray([]))
+                      ,A2($Html$Tags.label,
+                      _L.fromArray([$Html$Attributes.$for("toggle-all")]),
+                      _L.fromArray([$Html.text("Mark all as complete")]))
+                      ,A2($Html$Tags.ul,
+                      _L.fromArray([$Html$Attributes.id("todo-list")]),
+                      A2($List.map,
+                      todoItem,
+                      A2($List.filter,
+                      isVisible,
+                      tasks)))]));
+      }();
+   });
+   var view = function (state) {
+      return A2($Html$Tags.div,
+      _L.fromArray([$Html$Attributes.$class("todomvc-wrapper")]),
+      _L.fromArray([A2($Html$Tags.section,
+                   _L.fromArray([$Html$Attributes.id("todoapp")]),
+                   _L.fromArray([A2($Html$Optimize$RefEq.lazy,
+                                taskEntry,
+                                state.field)
+                                ,A3($Html$Optimize$RefEq.lazy2,
+                                taskList,
+                                state.visibility,
+                                state.tasks)
+                                ,A3($Html$Optimize$RefEq.lazy2,
+                                controls,
+                                state.visibility,
+                                state.tasks)]))
+                   ,infoFooter]));
+   };
+   var scene = F2(function (state,
+   _v25) {
+      return function () {
+         switch (_v25.ctor)
+         {case "_Tuple2":
+            return A4($Graphics$Element.container,
+              _v25._0,
+              _v25._1,
+              $Graphics$Element.midTop,
+              A3($Html.toElement,
+              550,
+              _v25._1,
+              view(state)));}
+         _E.Case($moduleName,
+         "on line 298, column 5 to 54");
+      }();
+   });
+   var main = A3($Signal.lift2,
+   scene,
+   state,
+   $Window.dimensions);
    _elm.Todo.values = {_op: _op
+                      ,enterKeyCode: enterKeyCode
                       ,State: State
                       ,Task: Task
                       ,newTask: newTask
