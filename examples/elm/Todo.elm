@@ -17,6 +17,7 @@ https://gist.github.com/evancz/2b2ba366cae1887fe621
 -}
 
 import String
+import List
 import Html (..)
 import Html.Attributes (..)
 import Html.Events (..)
@@ -107,9 +108,14 @@ step action state =
           let update t = if t.id == id then { t | editing <- isEditing } else t
           in  { state | tasks <- map update state.tasks }
 
-      UpdateTask id task ->
-          let update t = if t.id == id then { t | title <- task } else t
-          in  { state | tasks <- map update state.tasks }
+      UpdateTask id rawTitle ->
+          let newTitle = String.trim rawTitle
+              update task =
+                  if | task.id /= id -> Just task
+                     | String.isEmpty newTitle -> Nothing
+                     | otherwise -> Just { task | title <- newTitle }
+          in
+              { state | tasks <- List.filterMap update state.tasks }
 
       Delete id ->
           { state | tasks <- filter (\t -> t.id /= id) state.tasks }

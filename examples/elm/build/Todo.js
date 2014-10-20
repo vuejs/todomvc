@@ -1971,7 +1971,7 @@ Elm.Todo.make = function (_elm) {
                return _L.append("#todo-",
                  $String.show(_v0._0));}
             _E.Case($moduleName,
-            "on line 318, column 42 to 61");
+            "on line 324, column 42 to 61");
          }();
       };
       var needsFocus = function (act) {
@@ -2091,20 +2091,21 @@ Elm.Todo.make = function (_elm) {
               state);
             case "UpdateTask":
             return function () {
-                 var update = function (t) {
-                    return _U.eq(t.id,
-                    action._0) ? _U.replace([["title"
-                                             ,action._1]],
-                    t) : t;
+                 var newTitle = $String.trim(action._1);
+                 var update = function (task) {
+                    return !_U.eq(task.id,
+                    action._0) ? $Maybe.Just(task) : $String.isEmpty(newTitle) ? $Maybe.Nothing : $Maybe.Just(_U.replace([["title"
+                                                                                                                          ,newTitle]],
+                    task));
                  };
                  return _U.replace([["tasks"
-                                    ,A2($List.map,
+                                    ,A2($List.filterMap,
                                     update,
                                     state.tasks)]],
                  state);
               }();}
          _E.Case($moduleName,
-         "between lines 92 and 129");
+         "between lines 93 and 135");
       }();
    });
    var state = A3($Signal.foldp,
@@ -2145,7 +2146,7 @@ Elm.Todo.make = function (_elm) {
              ,visibility: d};
    });
    var enterKeyCode = 13;
-   var onEnter = F2(function (handle,
+   var onenter = F2(function (handle,
    value) {
       return A4($Html.on,
       "keydown",
@@ -2175,7 +2176,7 @@ Elm.Todo.make = function (_elm) {
                                 $Html.getValue,
                                 actions.handle,
                                 UpdateField)
-                                ,A2(onEnter,
+                                ,A2(onenter,
                                 actions.handle,
                                 Add)]),
                    _L.fromArray([]))]));
@@ -2233,7 +2234,7 @@ Elm.Todo.make = function (_elm) {
                                    ,A2($Html$Events.onblur,
                                    actions.handle,
                                    A2(EditingTask,todo.id,false))
-                                   ,A2(onEnter,
+                                   ,A2(onenter,
                                    actions.handle,
                                    A2(EditingTask,
                                    todo.id,
@@ -2259,7 +2260,7 @@ Elm.Todo.make = function (_elm) {
                   case "Completed":
                   return todo.completed;}
                _E.Case($moduleName,
-               "between lines 171 and 176");
+               "between lines 177 and 182");
             }();
          };
          return A2($Html$Tags.section,
@@ -2324,7 +2325,7 @@ Elm.Todo.make = function (_elm) {
               _v25._1,
               view(state)));}
          _E.Case($moduleName,
-         "on line 298, column 5 to 54");
+         "on line 304, column 5 to 54");
       }();
    });
    var main = A3($Signal.lift2,
@@ -2349,7 +2350,7 @@ Elm.Todo.make = function (_elm) {
                       ,ChangeVisibility: ChangeVisibility
                       ,step: step
                       ,view: view
-                      ,onEnter: onEnter
+                      ,onenter: onenter
                       ,taskEntry: taskEntry
                       ,taskList: taskList
                       ,todoItem: todoItem
